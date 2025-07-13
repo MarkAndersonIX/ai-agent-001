@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  ai-agent-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - AGENT_LLM__API_KEY=${OPENAI_API_KEY}
+      - AGENT_EMBEDDING__API_KEY=${OPENAI_API_KEY}
+      - AGENT_API__HOST=0.0.0.0
+      - AGENT_API__PORT=8000
+      - AGENT_API__DEBUG=false
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Redis for distributed memory (production)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    profiles:
+      - production
+    command: redis-server --appendonly yes
+
+  # Optional: PostgreSQL for persistent storage (production)
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=ai_agents
+      - POSTGRES_USER=ai_agent
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-defaultpassword}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    profiles:
+      - production
+
+volumes:
+  redis_data:
+  postgres_data:

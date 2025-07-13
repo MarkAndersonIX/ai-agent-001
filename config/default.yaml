@@ -1,0 +1,168 @@
+# AI Agent Base - Default Configuration
+
+# Vector Store Configuration
+vector_store:
+  type: "chroma"
+  path: "./data/vectors"
+  collection_name: "ai_agents"
+  allow_reset: false
+  anonymized_telemetry: false
+
+# Document Store Configuration  
+document_store:
+  type: "filesystem"
+  path: "./data/documents"
+
+# Memory Backend Configuration
+memory:
+  type: "in_memory"
+  max_sessions: 1000
+  session_timeout_hours: 24
+
+# LLM Provider Configuration
+llm:
+  type: "openai"
+  model: "gpt-3.5-turbo"
+  temperature: 0.7
+  max_tokens: 2000
+  api_key: "${OPENAI_API_KEY}"
+
+# Embedding Provider Configuration
+embedding:
+  type: "openai"
+  model: "text-embedding-ada-002"
+  api_key: "${OPENAI_API_KEY}"
+
+# Agent Configurations
+agents:
+  general:
+    system_prompt: |
+      You are a helpful AI assistant that can answer questions and help with various tasks.
+      You have access to a knowledge base and various tools to assist users effectively.
+    tools:
+      - web_search
+      - calculator
+    rag_settings:
+      top_k: 5
+      similarity_threshold: 0.7
+    llm_settings:
+      temperature: 0.7
+      max_tokens: 2000
+    max_history_messages: 10
+    
+  code_assistant:
+    system_prompt: |
+      You are an expert code assistant that helps developers write clean, 
+      efficient code following best practices. You provide clear explanations,
+      well-commented examples, and practical guidance for programming tasks.
+    tools:
+      - web_search
+      - file_operations
+      - calculator
+    rag_settings:
+      top_k: 7
+      similarity_threshold: 0.8
+    llm_settings:
+      temperature: 0.1
+      max_tokens: 3000
+    max_history_messages: 15
+    document_sources:
+      - path: "./data/programming-docs/"
+        types: ["pdf", "md", "txt", "py", "js", "java", "cpp"]
+        recursive: true
+    
+  research_agent:
+    system_prompt: |
+      You are a research assistant that finds credible sources, 
+      summarizes complex topics, and provides well-cited information.
+      You prioritize accuracy, objectivity, and comprehensive analysis.
+    tools:
+      - web_search
+    rag_settings:
+      top_k: 10
+      similarity_threshold: 0.6
+    llm_settings:
+      temperature: 0.3
+      max_tokens: 4000
+    max_history_messages: 8
+    
+  document_qa:
+    system_prompt: |
+      You are a document analysis assistant that answers questions 
+      based on provided documents with accurate citations and references.
+      You focus on what is explicitly stated in the documents.
+    tools: []
+    rag_settings:
+      top_k: 8
+      similarity_threshold: 0.7
+    llm_settings:
+      temperature: 0.2
+      max_tokens: 2500
+    max_history_messages: 12
+
+# Tool Configurations
+tools:
+  web_search:
+    type: "web_search"
+    cache_results: true
+    max_results: 5
+    quality_threshold: 0.8
+    cache_freshness_days: 30
+    
+  calculator:
+    type: "calculator"
+    max_expression_length: 1000
+    
+  file_operations:
+    type: "file_operations"
+    allowed_paths: ["./data/", "./workspace/", "./documents/"]
+    max_file_size: 10485760  # 10MB
+    allowed_extensions: [".txt", ".md", ".json", ".yaml", ".yml", ".csv", ".py", ".js", ".html", ".css", ".cpp", ".java"]
+    
+  code_execution:
+    type: "code_execution"
+    timeout_seconds: 30
+    allowed_languages: ["python", "javascript", "bash"]
+    max_output_length: 10000
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  cors_enabled: true
+  max_request_size: 16777216  # 16MB
+  session_timeout_minutes: 60
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "./logs/ai_agent.log"
+  max_file_size: 10485760  # 10MB
+  backup_count: 5
+
+# Security Configuration
+security:
+  api_key_required: false
+  rate_limiting:
+    enabled: false
+    requests_per_minute: 60
+  cors:
+    origins: ["*"]
+    methods: ["GET", "POST", "PUT", "DELETE"]
+    headers: ["Content-Type", "Authorization"]
+
+# Performance Configuration
+performance:
+  vector_search_timeout: 30
+  llm_timeout: 120
+  tool_execution_timeout: 60
+  max_concurrent_requests: 10
+  
+# Storage Configuration
+storage:
+  cleanup_interval_hours: 24
+  max_document_age_days: 365
+  max_session_age_days: 30
+  auto_backup: false
