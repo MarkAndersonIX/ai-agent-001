@@ -20,43 +20,6 @@ from tests.conftest import (
 class TestAgentIntegration:
     """Integration tests for agent components working together."""
 
-    @pytest.fixture
-    def mock_components(self):
-        """Set up mock components for integration testing."""
-        # Register mock implementations
-        ComponentFactory.register_vector_store("mock", MockVectorStore)
-        ComponentFactory.register_llm_provider("mock", MockLLMProvider)
-        ComponentFactory.register_embedding_provider("mock", MockEmbeddingProvider)
-
-        from providers.in_memory_backend import InMemoryBackend
-
-        ComponentFactory.register_memory_backend("mock", InMemoryBackend)
-
-        from providers.filesystem_document_store import FileSystemDocumentStore
-
-        ComponentFactory.register_document_store("mock", FileSystemDocumentStore)
-
-    @pytest.fixture
-    def test_config(self, temp_dir):
-        """Create test configuration."""
-        config_data = {
-            "vector_store": {"type": "mock"},
-            "document_store": {"type": "mock", "path": temp_dir},
-            "memory": {"type": "mock", "max_sessions": 10},
-            "llm": {"type": "mock", "model": "mock-model"},
-            "embedding": {"type": "mock", "model": "mock-embedding"},
-            "agents": {
-                "general": {
-                    "system_prompt": "You are a helpful assistant.",
-                    "tools": [],
-                    "rag_settings": {"top_k": 3, "similarity_threshold": 0.7},
-                    "llm_settings": {"temperature": 0.7},
-                    "max_history_messages": 5,
-                }
-            },
-        }
-        return MockConfigProvider(config_data)
-
     def test_agent_initialization(self, mock_components, test_config):
         """Test agent initialization with all components."""
         agent = GeneralAgent(test_config)
@@ -78,7 +41,7 @@ class TestAgentIntegration:
         assert response.content is not None
         assert response.session_id is not None
         assert response.timestamp is not None
-        assert "mock" in response.metadata.get("agent_type", "")
+        assert response.metadata.get("agent_type") == "general"
 
     def test_agent_process_query_with_session(self, mock_components, test_config):
         """Test query processing with session continuity."""

@@ -74,7 +74,8 @@ class MockConfigProvider(ConfigProvider):
 class MockVectorStore(VectorStore):
     """Mock vector store for testing."""
 
-    def __init__(self):
+    def __init__(self, config=None):
+        self.config = config or {}
         self.documents = {}
         self.next_id = 1
 
@@ -144,7 +145,8 @@ class MockVectorStore(VectorStore):
 class MockLLMProvider(LLMProvider):
     """Mock LLM provider for testing."""
 
-    def __init__(self, responses=None):
+    def __init__(self, config=None, responses=None):
+        self.config = config or {}
         self.responses = responses or ["This is a mock response."]
         self.call_count = 0
 
@@ -185,6 +187,9 @@ class MockLLMProvider(LLMProvider):
 class MockEmbeddingProvider(EmbeddingProvider):
     """Mock embedding provider for testing."""
 
+    def __init__(self, config=None):
+        self.config = config or {}
+
     def embed_text(self, text, **kwargs):
         # Simple mock embedding based on text hash
         import hashlib
@@ -218,8 +223,13 @@ class MockTool(BaseTool):
     """Mock tool for testing."""
 
     def __init__(
-        self, name="mock_tool", description="Mock tool for testing", responses=None
+        self,
+        config=None,
+        name="mock_tool",
+        description="Mock tool for testing",
+        responses=None,
     ):
+        self.config = config or {}
         self._name = name
         self._description = description
         self.responses = responses or ["Mock tool executed successfully"]
@@ -340,16 +350,90 @@ def sample_chat_messages():
 
 
 @pytest.fixture
-def api_client():
+def mock_components():
+    """Set up mock components for integration testing."""
+    from core.component_factory import ComponentFactory
+
+    # Register mock implementations
+    ComponentFactory.register_vector_store("mock", MockVectorStore)
+    ComponentFactory.register_llm_provider("mock", MockLLMProvider)
+    ComponentFactory.register_embedding_provider("mock", MockEmbeddingProvider)
+    ComponentFactory.register_tool("mock_tool", MockTool)
+
+    from providers.in_memory_backend import InMemoryBackend
+
+    ComponentFactory.register_memory_backend("mock", InMemoryBackend)
+
+    from providers.filesystem_document_store import FileSystemDocumentStore
+
+    ComponentFactory.register_document_store("mock", FileSystemDocumentStore)
+
+
+@pytest.fixture
+def test_config(temp_dir):
+    """Create test configuration."""
+    config_data = {
+        "vector_store": {"type": "mock"},
+        "document_store": {"type": "mock", "path": temp_dir},
+        "memory": {"type": "mock", "max_sessions": 10},
+        "llm": {"type": "mock", "model": "mock-model"},
+        "embedding": {"type": "mock", "model": "mock-embedding"},
+        "agents": {
+            "general": {
+                "system_prompt": "You are a helpful assistant.",
+                "tools": ["mock_tool"],
+                "rag_settings": {"top_k": 3, "similarity_threshold": 0.7},
+                "llm_settings": {"temperature": 0.5, "max_tokens": 500},
+            }
+        },
+        "tools": {"mock_tool": {"type": "mock_tool"}},
+    }
+    return MockConfigProvider(config_data)
+
+
+@pytest.fixture
+def api_client(mock_components):
     """Create a test client for the Flask API."""
-    from api.server import create_app
+    try:
+        import os
+        from unittest.mock import patch
 
-    # Create app with test configuration
-    app = create_app()
-    app.config["TESTING"] = True
+        from api.server import create_app
 
-    with app.test_client() as client:
-        yield client
+        # Set up test configuration environment
+        test_env = {"OPENAI_API_KEY": "test-key", "CONFIG_ENV": "test"}
+
+        with patch.dict(os.environ, test_env):
+            # Ensure mock components are registered BEFORE creating the app
+            from core.component_factory import ComponentFactory
+
+            ComponentFactory.register_vector_store("mock", MockVectorStore)
+            ComponentFactory.register_llm_provider("mock", MockLLMProvider)
+            ComponentFactory.register_embedding_provider("mock", MockEmbeddingProvider)
+            ComponentFactory.register_tool("mock_tool", MockTool)
+
+            from providers.in_memory_backend import InMemoryBackend
+
+            ComponentFactory.register_memory_backend("mock", InMemoryBackend)
+
+            from providers.filesystem_document_store import FileSystemDocumentStore
+
+            ComponentFactory.register_document_store("mock", FileSystemDocumentStore)
+
+            # Create app with test configuration
+            test_config_path = "./config/test.yaml"
+            agent_api = create_app(config_path=test_config_path)
+
+            # Get the Flask app from AgentAPI
+            app = agent_api.app
+
+            # Set Flask's built-in TESTING config
+            app.testing = True
+
+            with app.test_client() as client:
+                yield client
+    except ImportError as e:
+        pytest.skip(f"API server import failed: {e}")
 
 
 # Pytest markers for different test types

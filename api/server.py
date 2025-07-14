@@ -5,6 +5,7 @@ from typing import Any, Dict, Optional
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from werkzeug.exceptions import BadRequest, UnsupportedMediaType
 
 from agents.code_assistant_agent import CodeAssistantAgent
 from agents.document_qa_agent import DocumentQAAgent
@@ -118,7 +119,7 @@ class AgentAPI:
                     return jsonify({"error": "No JSON data provided"}), 400
 
                 message = data.get("message")
-                if not message:
+                if not message or not message.strip():
                     return jsonify({"error": "Message is required"}), 400
 
                 session_id = data.get("session_id")
@@ -144,6 +145,18 @@ class AgentAPI:
                     }
                 )
 
+            except BadRequest as e:
+                logger.warning(f"Bad request in chat endpoint: {str(e)}")
+                return (
+                    jsonify({"error": "Bad request", "details": str(e)}),
+                    400,
+                )
+            except UnsupportedMediaType as e:
+                logger.warning(f"Unsupported media type in chat endpoint: {str(e)}")
+                return (
+                    jsonify({"error": "Unsupported media type", "details": str(e)}),
+                    415,
+                )
             except Exception as e:
                 logger.error(f"Error in chat endpoint: {str(e)}")
                 logger.error(traceback.format_exc())
@@ -291,7 +304,7 @@ class AgentAPI:
                     return jsonify({"error": "No JSON data provided"}), 400
 
                 content = data.get("content")
-                if not content:
+                if not content or not content.strip():
                     return jsonify({"error": "Content is required"}), 400
 
                 metadata = data.get("metadata", {})
@@ -310,6 +323,12 @@ class AgentAPI:
                     201,
                 )
 
+            except BadRequest as e:
+                logger.warning(f"Bad request in add document endpoint: {str(e)}")
+                return (
+                    jsonify({"error": "Bad request", "details": str(e)}),
+                    400,
+                )
             except Exception as e:
                 logger.error(f"Error adding document: {str(e)}")
                 return (
@@ -368,7 +387,7 @@ class AgentAPI:
                     return jsonify({"error": "No JSON data provided"}), 400
 
                 input_text = data.get("input")
-                if not input_text:
+                if not input_text or not input_text.strip():
                     return jsonify({"error": "Input is required"}), 400
 
                 kwargs = data.get("parameters", {})
@@ -378,6 +397,12 @@ class AgentAPI:
 
                 return jsonify(result)
 
+            except BadRequest as e:
+                logger.warning(f"Bad request in execute tool endpoint: {str(e)}")
+                return (
+                    jsonify({"error": "Bad request", "details": str(e)}),
+                    400,
+                )
             except Exception as e:
                 logger.error(f"Error executing tool: {str(e)}")
                 return (

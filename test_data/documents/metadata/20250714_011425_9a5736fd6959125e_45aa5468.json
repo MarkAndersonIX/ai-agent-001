@@ -1,0 +1,13 @@
+{
+  "doc_id": "20250714_011425_9a5736fd6959125e_45aa5468",
+  "metadata": {
+    "type": "test",
+    "agent_type": "general",
+    "added_at": "2025-07-14T01:14:25.136196"
+  },
+  "created_at": "2025-07-14T01:14:25.136244",
+  "updated_at": "2025-07-14T01:14:25.136244",
+  "content_hash": "9a5736fd6959125e54440ffd943f934a2daf0cdc3632d314dd2f374a06e21092",
+  "file_path": "/path/to/doc.txt",
+  "content_length": 21
+}

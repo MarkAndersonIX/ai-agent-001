@@ -1,0 +1,46 @@
+# Test configuration for API integration tests
+vector_store:
+  type: "mock"
+
+document_store:
+  type: "mock"
+  path: "./test_data/documents"
+
+memory:
+  type: "mock"
+  max_sessions: 10
+
+llm:
+  type: "mock"
+  model: "mock-model"
+
+embedding:
+  type: "mock"
+  model: "mock-embedding"
+
+agents:
+  general:
+    system_prompt: "You are a helpful assistant."
+    tools: ["mock_tool"]
+    rag_settings:
+      top_k: 3
+      similarity_threshold: 0.7
+    llm_settings:
+      temperature: 0.5
+      max_tokens: 500
+
+  code_assistant:
+    system_prompt: "You are a code assistant."
+    tools: ["mock_tool"]
+
+  research_agent:
+    system_prompt: "You are a research assistant."
+    tools: ["mock_tool"]
+
+  document_qa:
+    system_prompt: "You are a document Q&A assistant."
+    tools: ["mock_tool"]
+
+tools:
+  mock_tool:
+    type: "mock_tool"

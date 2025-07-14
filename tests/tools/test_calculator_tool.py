@@ -122,7 +122,7 @@ class TestCalculatorTool:
 
     def test_invalid_expression(self, calculator):
         """Test handling invalid mathematical expressions."""
-        result = calculator.execute("2 + + 3")  # Invalid syntax
+        result = calculator.execute("2 + * 3")  # Actually invalid syntax
 
         assert result.success is False
         assert (

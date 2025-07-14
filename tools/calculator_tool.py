@@ -104,7 +104,6 @@ class CalculatorTool(BaseTool):
 
         # Replace common mathematical notation
         replacements = {
-            "x": "*",  # 'x' as multiplication
             "×": "*",  # multiplication symbol
             "÷": "/",  # division symbol
             "^": "**",  # exponentiation
@@ -112,6 +111,12 @@ class CalculatorTool(BaseTool):
 
         for old, new in replacements.items():
             expression = expression.replace(old, new)
+
+        # Handle 'x' as multiplication with two patterns:
+        # 1. Standalone x (with word boundaries): "2 x 3", "x+5", "(x)"
+        expression = re.sub(r"\bx\b", "*", expression)
+        # 2. x between numbers/parentheses: "5x3", "(2)x(3)", "5x(3+2)"
+        expression = re.sub(r"(\d|\))x(\d|\()", r"\1*\2", expression)
 
         # Add basic math functions
         math_functions = {
@@ -162,6 +167,9 @@ class CalculatorTool(BaseTool):
             if func_name in self.FUNCTIONS:
                 args = [self._eval_node(arg) for arg in node.args]
                 return self.FUNCTIONS[func_name](*args)
+        elif isinstance(node, ast.List):
+            # Support list literals like [1, 2, 3]
+            return [self._eval_node(item) for item in node.elts]
         elif isinstance(node, ast.Name):
             # Handle constants like 'pi' or 'e'
             constants = {"pi": 3.141592653589793, "e": 2.718281828459045}

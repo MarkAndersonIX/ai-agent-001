@@ -34,6 +34,9 @@ class InMemoryBackend(MemoryBackend):
     ) -> bool:
         """Save or update a conversation session."""
         try:
+            # Validate inputs
+            if not session_id or not agent_type:
+                return False
             with self._lock:
                 now = datetime.now()
 

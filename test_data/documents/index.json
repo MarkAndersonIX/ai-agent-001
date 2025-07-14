@@ -1,0 +1,21 @@
+{
+  "20250714_011425_9a5736fd6959125e_45aa5468": {
+    "content_hash": "9a5736fd6959125e54440ffd943f934a2daf0cdc3632d314dd2f374a06e21092",
+    "created_at": "2025-07-14T01:14:25.136244",
+    "file_path": "/path/to/doc.txt",
+    "metadata": {
+      "type": "test",
+      "agent_type": "general",
+      "added_at": "2025-07-14T01:14:25.136196"
+    }
+  },
+  "20250714_011425_9d9595c5d94fb65b_71ca656e": {
+    "content_hash": "9d9595c5d94fb65b824f56e9999527dba9542481580d69feb89056aabaa0aa87",
+    "created_at": "2025-07-14T01:14:25.900729",
+    "file_path": null,
+    "metadata": {
+      "agent_type": "general",
+      "added_at": "2025-07-14T01:14:25.900685"
+    }
+  }
+}
