@@ -345,6 +345,7 @@ def test_custom_agent():
 ### Development Setup
 - All minimal requirements
 - Test dependencies: `pip install -r tests/test_requirements.txt`
+- Pre-commit hooks: `pre-commit install` (auto-formats code before commits)
 - Optional: Docker for containerized testing
 
 ### Production Setup
@@ -364,7 +365,10 @@ def test_custom_agent():
 
 ### Quality Assurance
 ```bash
-# Code formatting
+# Automated pre-commit checks (runs on commit)
+pre-commit run --all-files
+
+# Manual code formatting
 black .
 isort .
 
@@ -389,6 +393,7 @@ tox
 - [x] Specialized agent examples
 - [x] Comprehensive test suite with TDD support
 - [x] CI/CD pipeline with GitHub Actions
+- [x] Pre-commit hooks for automated code quality
 - [x] Docker containerization
 - [ ] Advanced memory compression algorithms
 - [ ] Multi-tenant support
