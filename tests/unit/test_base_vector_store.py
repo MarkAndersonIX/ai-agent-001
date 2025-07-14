@@ -8,26 +8,21 @@ from core.base_vector_store import VectorStore, Document, SearchResult
 
 class TestDocument:
     """Test Document class."""
-    
+
     def test_document_creation(self):
         """Test creating a document."""
         doc = Document(
-            content="Test content",
-            metadata={"type": "test"},
-            doc_id="test_id"
+            content="Test content", metadata={"type": "test"}, doc_id="test_id"
         )
-        
+
         assert doc.content == "Test content"
         assert doc.metadata == {"type": "test"}
         assert doc.doc_id == "test_id"
-    
+
     def test_document_without_id(self):
         """Test creating a document without ID."""
-        doc = Document(
-            content="Test content",
-            metadata={"type": "test"}
-        )
-        
+        doc = Document(content="Test content", metadata={"type": "test"})
+
         assert doc.content == "Test content"
         assert doc.metadata == {"type": "test"}
         assert doc.doc_id is None
@@ -35,19 +30,19 @@ class TestDocument:
 
 class TestSearchResult:
     """Test SearchResult class."""
-    
+
     def test_search_result_creation(self):
         """Test creating a search result."""
         doc = Document("Test", {}, "id1")
         result = SearchResult(document=doc, score=0.85)
-        
+
         assert result.document == doc
         assert result.score == 0.85
 
 
 class TestVectorStoreAbstract:
     """Test VectorStore abstract interface."""
-    
+
     def test_cannot_instantiate_abstract_class(self):
         """Test that VectorStore cannot be instantiated directly."""
         with pytest.raises(TypeError):
@@ -56,119 +51,118 @@ class TestVectorStoreAbstract:
 
 class TestMockVectorStore:
     """Test MockVectorStore implementation."""
-    
+
     def test_add_documents(self, mock_vector_store, sample_documents):
         """Test adding documents to vector store."""
         doc_ids = mock_vector_store.add_documents(sample_documents)
-        
+
         assert len(doc_ids) == 3
         assert all(isinstance(doc_id, str) for doc_id in doc_ids)
         assert mock_vector_store.count_documents() == 3
-    
+
     def test_similarity_search(self, mock_vector_store, sample_documents):
         """Test similarity search functionality."""
         # Add documents first
         mock_vector_store.add_documents(sample_documents)
-        
+
         # Search for Python-related content
         results = mock_vector_store.similarity_search("Python", k=2)
-        
+
         assert len(results) <= 2
         assert all(isinstance(result, SearchResult) for result in results)
         assert all(0 <= result.score <= 1 for result in results)
-        
+
         # Results should be sorted by score (highest first)
         if len(results) > 1:
             assert results[0].score >= results[1].score
-    
+
     def test_similarity_search_with_filters(self, mock_vector_store, sample_documents):
         """Test similarity search with metadata filters."""
         mock_vector_store.add_documents(sample_documents)
-        
+
         # Search with type filter
         results = mock_vector_store.similarity_search(
-            "test", 
-            filters={"type": "programming"}
+            "test", filters={"type": "programming"}
         )
-        
+
         # Should only return documents matching the filter
         for result in results:
             assert result.document.metadata.get("type") == "programming"
-    
+
     def test_get_document(self, mock_vector_store, sample_documents):
         """Test retrieving specific documents."""
         doc_ids = mock_vector_store.add_documents(sample_documents)
-        
+
         # Get first document
         retrieved_doc = mock_vector_store.get_document(doc_ids[0])
-        
+
         assert retrieved_doc is not None
         assert retrieved_doc.doc_id == doc_ids[0]
         assert retrieved_doc.content == sample_documents[0].content
-    
+
     def test_get_nonexistent_document(self, mock_vector_store):
         """Test retrieving non-existent document."""
         result = mock_vector_store.get_document("nonexistent_id")
         assert result is None
-    
+
     def test_delete_documents(self, mock_vector_store, sample_documents):
         """Test deleting documents."""
         doc_ids = mock_vector_store.add_documents(sample_documents)
         initial_count = mock_vector_store.count_documents()
-        
+
         # Delete first document
         success = mock_vector_store.delete_documents([doc_ids[0]])
-        
+
         assert success is True
         assert mock_vector_store.count_documents() == initial_count - 1
         assert mock_vector_store.get_document(doc_ids[0]) is None
-    
+
     def test_list_documents(self, mock_vector_store, sample_documents):
         """Test listing documents."""
         mock_vector_store.add_documents(sample_documents)
-        
+
         # List all documents
         all_docs = mock_vector_store.list_documents()
         assert len(all_docs) == 3
-        
+
         # List with limit
         limited_docs = mock_vector_store.list_documents(limit=2)
         assert len(limited_docs) == 2
-        
+
         # List with offset
         offset_docs = mock_vector_store.list_documents(offset=1)
         assert len(offset_docs) == 2
-    
+
     def test_list_documents_with_filters(self, mock_vector_store, sample_documents):
         """Test listing documents with filters."""
         mock_vector_store.add_documents(sample_documents)
-        
+
         # Filter by type
         filtered_docs = mock_vector_store.list_documents(
             filters={"type": "programming"}
         )
-        
+
         assert len(filtered_docs) == 1
         assert filtered_docs[0].metadata["type"] == "programming"
-    
+
     def test_count_documents(self, mock_vector_store, sample_documents):
         """Test counting documents."""
         assert mock_vector_store.count_documents() == 0
-        
+
         mock_vector_store.add_documents(sample_documents)
         assert mock_vector_store.count_documents() == 3
-        
+
         # Count with filters
         programming_count = mock_vector_store.count_documents(
             filters={"type": "programming"}
         )
         assert programming_count == 1
-    
+
     def test_empty_vector_store(self, mock_vector_store):
         """Test operations on empty vector store."""
         assert mock_vector_store.count_documents() == 0
         assert mock_vector_store.list_documents() == []
-        
+
         results = mock_vector_store.similarity_search("test")
         assert results == []
 

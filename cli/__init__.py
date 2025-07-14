@@ -2,4 +2,4 @@
 
 from .main import AgentCLI
 
-__all__ = ['AgentCLI']
+__all__ = ["AgentCLI"]

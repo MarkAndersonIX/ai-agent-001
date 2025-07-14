@@ -6,8 +6,8 @@ from .in_memory_backend import InMemoryBackend
 from .yaml_config_provider import YAMLConfigProvider
 
 __all__ = [
-    'ChromaVectorStore',
-    'FileSystemDocumentStore',
-    'InMemoryBackend',
-    'YAMLConfigProvider'
+    "ChromaVectorStore",
+    "FileSystemDocumentStore",
+    "InMemoryBackend",
+    "YAMLConfigProvider",
 ]

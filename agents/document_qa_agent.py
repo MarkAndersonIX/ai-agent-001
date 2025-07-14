@@ -5,32 +5,35 @@ from core.base_config_provider import ConfigProvider
 
 class DocumentQAAgent(BaseAgent):
     """Document Q&A agent specialized for analyzing and answering questions about documents."""
-    
+
     def __init__(self, config: ConfigProvider):
         """Initialize the document Q&A agent."""
         super().__init__("document_qa", config)
-    
-    def _build_system_prompt(self, relevant_context: Dict[str, Any], context: Dict[str, Any]) -> str:
+
+    def _build_system_prompt(
+        self, relevant_context: Dict[str, Any], context: Dict[str, Any]
+    ) -> str:
         """Build the system prompt for the document Q&A agent."""
-        
+
         # Get base system prompt from configuration
-        base_prompt = self.agent_config.get("system_prompt", 
+        base_prompt = self.agent_config.get(
+            "system_prompt",
             "You are a document analysis assistant that answers questions "
-            "based on provided documents with accurate citations.")
-        
+            "based on provided documents with accurate citations.",
+        )
+
         # Add context information if available
         context_parts = [base_prompt]
-        
+
         if relevant_context.get("context"):
             context_parts.append(
-                "\nRelevant document content:\n" + 
-                relevant_context["context"]
+                "\nRelevant document content:\n" + relevant_context["context"]
             )
         else:
             context_parts.append(
                 "\nNo relevant documents found in the knowledge base for this query."
             )
-        
+
         # Add specialized document analysis instructions
         context_parts.append(
             "\nDocument Analysis Guidelines:\n"
@@ -41,7 +44,7 @@ class DocumentQAAgent(BaseAgent):
             "- If information is not in the documents, clearly state this\n"
             "- Summarize multiple relevant sections when they relate to the question"
         )
-        
+
         # Add citation and referencing instructions
         context_parts.append(
             "\nCitation Requirements:\n"
@@ -51,7 +54,7 @@ class DocumentQAAgent(BaseAgent):
             "- Reference multiple documents if they contain relevant information\n"
             "- Note any contradictions between different documents"
         )
-        
+
         # Add response formatting guidelines
         context_parts.append(
             "\nResponse Format:\n"
@@ -61,7 +64,7 @@ class DocumentQAAgent(BaseAgent):
             "- Include a summary if the answer is complex\n"
             "- List all referenced documents at the end"
         )
-        
+
         # Add limitations and uncertainty handling
         context_parts.append(
             "\nHandling Uncertainty:\n"
@@ -71,7 +74,7 @@ class DocumentQAAgent(BaseAgent):
             "- Note if documents are incomplete or unclear on the topic\n"
             "- Indicate confidence level when interpreting ambiguous content"
         )
-        
+
         # Add source information from context
         if relevant_context.get("sources"):
             source_info = []
@@ -82,14 +85,15 @@ class DocumentQAAgent(BaseAgent):
                 elif "source_url" in metadata:
                     source_info.append(f"Document {i}: {metadata['source_url']}")
                 else:
-                    source_info.append(f"Document {i}: {metadata.get('title', 'Unknown source')}")
-            
+                    source_info.append(
+                        f"Document {i}: {metadata.get('title', 'Unknown source')}"
+                    )
+
             if source_info:
                 context_parts.append(
-                    "\nAvailable Documents:\n" + 
-                    "\n".join(source_info)
+                    "\nAvailable Documents:\n" + "\n".join(source_info)
                 )
-        
+
         # Add document-specific analysis features
         context_parts.append(
             "\nDocument Analysis Features:\n"
@@ -100,7 +104,7 @@ class DocumentQAAgent(BaseAgent):
             "- Recognize document structure and organization\n"
             "- Compare information across multiple documents"
         )
-        
+
         # Add quality assurance reminders
         context_parts.append(
             "\nQuality Assurance:\n"
@@ -110,5 +114,5 @@ class DocumentQAAgent(BaseAgent):
             "- Maintain objectivity and avoid adding personal opinions\n"
             "- Focus on what the documents actually say, not external knowledge"
         )
-        
+
         return "\n".join(context_parts)
