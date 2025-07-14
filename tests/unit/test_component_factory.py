@@ -3,10 +3,11 @@ Unit tests for ComponentFactory.
 """
 
 import pytest
-from core.component_factory import ComponentFactory
-from core.base_vector_store import VectorStore
-from core.base_memory_backend import MemoryBackend
+
 from core.base_config_provider import ConfigProvider
+from core.base_memory_backend import MemoryBackend
+from core.base_vector_store import VectorStore
+from core.component_factory import ComponentFactory
 
 
 class TestComponentFactory:
@@ -171,7 +172,7 @@ class TestComponentFactory:
 
     def test_create_tool_registry(self):
         """Test creating tool registry with configurations."""
-        from core.base_tool import ToolRegistry, BaseTool, ToolResult
+        from core.base_tool import BaseTool, ToolRegistry, ToolResult
 
         class TestTool(BaseTool):
             def __init__(self, config):
@@ -271,36 +272,36 @@ from core.component_factory import ComponentFactory
 
 class TestComponentFactoryUnittest(unittest.TestCase):
     '''Example unittest.TestCase version of the same tests'''
-    
+
     def setUp(self):
         '''Set up test fixtures.'''
         self.initial_registrations = ComponentFactory.list_available_implementations()
-    
+
     def tearDown(self):
         '''Clean up after tests.'''
         # In a real implementation, you might restore initial state
         pass
-    
+
     def test_register_vector_store(self):
         '''Test registering vector store implementation.'''
         class TestVectorStore:
             def __init__(self, config): pass
-        
+
         ComponentFactory.register_vector_store('test_vector', TestVectorStore)
-        
+
         self.assertIn('test_vector', ComponentFactory._vector_store_registry)
         self.assertEqual(
-            ComponentFactory._vector_store_registry['test_vector'], 
+            ComponentFactory._vector_store_registry['test_vector'],
             TestVectorStore
         )
-    
+
     def test_create_vector_store_unknown_type(self):
         '''Test creating unknown vector store type raises ValueError.'''
         config = {'type': 'unknown_type'}
-        
+
         with self.assertRaises(ValueError) as context:
             ComponentFactory.create_vector_store(config)
-        
+
         self.assertIn("Unknown vector store type", str(context.exception))
 
 if __name__ == '__main__':

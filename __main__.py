@@ -8,8 +8,8 @@ Usage:
     python -m ai_agent_base --help    # Show help
 """
 
-import sys
 import argparse
+import sys
 from pathlib import Path
 
 # Add current directory to Python path for directory-based execution

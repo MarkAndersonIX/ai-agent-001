@@ -2,9 +2,10 @@
 Integration tests for Flask API endpoints.
 """
 
-import pytest
 import json
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
+
+import pytest
 
 
 class TestAPIIntegration:

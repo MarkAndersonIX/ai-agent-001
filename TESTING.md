@@ -160,7 +160,7 @@ Test REST API endpoints, error handling, and response formats.
 **Example:**
 ```python
 def test_chat_endpoint_success(api_client):
-    response = api_client.post('/agents/general/chat', 
+    response = api_client.post('/agents/general/chat',
         json={'message': 'Hello'})
     assert response.status_code == 200
 ```
@@ -278,7 +278,7 @@ Coverage settings are in `tox.ini`:
 ```ini
 [coverage:run]
 source = .
-omit = 
+omit =
     tests/*
     setup.py
     .tox/*
@@ -333,10 +333,10 @@ tox -e type-check
        # Arrange
        agent = GeneralAgent(config)
        query = "Hello"
-       
+
        # Act
        response = agent.process_query(query)
-       
+
        # Assert
        assert response.content is not None
    ```
@@ -346,7 +346,7 @@ tox -e type-check
    def test_calculator_valid_expression():
        # Test success case
        pass
-   
+
    def test_calculator_invalid_expression():
        # Test failure case
        pass
@@ -357,7 +357,7 @@ tox -e type-check
    @pytest.fixture
    def configured_agent():
        return GeneralAgent(test_config)
-   
+
    def test_agent_behavior(configured_agent):
        # Use the fixture
        pass
@@ -385,29 +385,29 @@ from [module] import [ComponentClass]
 
 class Test[ComponentName]:
     """Test [ComponentName] functionality."""
-    
+
     @pytest.fixture
     def component(self):
         """Create component instance for testing."""
         config = {"test": "config"}
         return ComponentClass(config)
-    
+
     def test_component_initialization(self, component):
         """Test component initializes correctly."""
         assert component is not None
         # Add specific assertions
-    
+
     def test_component_basic_functionality(self, component):
         """Test basic component functionality."""
         result = component.some_method("input")
         assert result is not None
         # Add specific assertions
-    
+
     def test_component_error_handling(self, component):
         """Test component handles errors gracefully."""
         with pytest.raises(ValueError):
             component.some_method(invalid_input)
-    
+
     @pytest.mark.slow
     def test_component_performance(self, component):
         """Test component performance with large inputs."""
@@ -447,7 +447,7 @@ import logging
 def test_with_logging(caplog):
     with caplog.at_level(logging.INFO):
         some_function_that_logs()
-    
+
     assert "expected log message" in caplog.text
 ```
 
@@ -463,7 +463,7 @@ def test_performance():
     start_time = time.time()
     result = expensive_operation()
     duration = time.time() - start_time
-    
+
     assert duration < 1.0  # Should complete within 1 second
     assert result is not None
 ```
@@ -477,13 +477,13 @@ import os
 def test_memory_usage():
     process = psutil.Process(os.getpid())
     initial_memory = process.memory_info().rss
-    
+
     # Perform operation
     large_operation()
-    
+
     final_memory = process.memory_info().rss
     memory_increase = final_memory - initial_memory
-    
+
     # Assert memory increase is reasonable
     assert memory_increase < 100 * 1024 * 1024  # Less than 100MB
 ```
@@ -499,7 +499,7 @@ from core.base_vector_store import Document
 class DocumentFactory(factory.Factory):
     class Meta:
         model = Document
-    
+
     content = factory.Faker('text')
     metadata = factory.Dict({'type': 'test'})
     doc_id = factory.Sequence(lambda n: f"doc_{n}")

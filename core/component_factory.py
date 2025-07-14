@@ -1,18 +1,18 @@
-from typing import Dict, Any, Type, Optional, List
 import importlib
 import logging
+from typing import Any, Dict, List, Optional, Type
 
-from .base_vector_store import VectorStore
-from .base_document_store import DocumentStore
-from .base_memory_backend import MemoryBackend
 from .base_config_provider import (
-    ConfigProvider,
     CompositeConfigProvider,
+    ConfigProvider,
     EnvironmentConfigProvider,
 )
-from .base_llm_provider import LLMProvider
+from .base_document_store import DocumentStore
 from .base_embedding_provider import EmbeddingProvider
+from .base_llm_provider import LLMProvider
+from .base_memory_backend import MemoryBackend
 from .base_tool import BaseTool, ToolRegistry
+from .base_vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
 
@@ -321,12 +321,12 @@ class ComponentFactory:
             import providers.chroma_vector_store  # noqa
             import providers.filesystem_document_store  # noqa
             import providers.in_memory_backend  # noqa
-            import providers.openai_llm_provider  # noqa
             import providers.openai_embedding_provider  # noqa
-            import tools.web_search_tool  # noqa
+            import providers.openai_llm_provider  # noqa
             import tools.calculator_tool  # noqa
-            import tools.file_operations_tool  # noqa
             import tools.code_execution_tool  # noqa
+            import tools.file_operations_tool  # noqa
+            import tools.web_search_tool  # noqa
 
             logger.info("Auto-registered all available implementations")
         except ImportError as e:

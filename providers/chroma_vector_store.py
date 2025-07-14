@@ -1,8 +1,8 @@
-from typing import List, Dict, Any, Optional
 import os
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-from core.base_vector_store import VectorStore, Document, SearchResult
+from core.base_vector_store import Document, SearchResult, VectorStore
 
 
 class ChromaVectorStore(VectorStore):

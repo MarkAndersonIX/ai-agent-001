@@ -8,7 +8,7 @@ vector_store:
   allow_reset: false
   anonymized_telemetry: false
 
-# Document Store Configuration  
+# Document Store Configuration
 document_store:
   type: "filesystem"
   path: "./data/documents"
@@ -49,10 +49,10 @@ agents:
       temperature: 0.7
       max_tokens: 2000
     max_history_messages: 10
-    
+
   code_assistant:
     system_prompt: |
-      You are an expert code assistant that helps developers write clean, 
+      You are an expert code assistant that helps developers write clean,
       efficient code following best practices. You provide clear explanations,
       well-commented examples, and practical guidance for programming tasks.
     tools:
@@ -70,10 +70,10 @@ agents:
       - path: "./data/programming-docs/"
         types: ["pdf", "md", "txt", "py", "js", "java", "cpp"]
         recursive: true
-    
+
   research_agent:
     system_prompt: |
-      You are a research assistant that finds credible sources, 
+      You are a research assistant that finds credible sources,
       summarizes complex topics, and provides well-cited information.
       You prioritize accuracy, objectivity, and comprehensive analysis.
     tools:
@@ -85,10 +85,10 @@ agents:
       temperature: 0.3
       max_tokens: 4000
     max_history_messages: 8
-    
+
   document_qa:
     system_prompt: |
-      You are a document analysis assistant that answers questions 
+      You are a document analysis assistant that answers questions
       based on provided documents with accurate citations and references.
       You focus on what is explicitly stated in the documents.
     tools: []
@@ -108,17 +108,17 @@ tools:
     max_results: 5
     quality_threshold: 0.8
     cache_freshness_days: 30
-    
+
   calculator:
     type: "calculator"
     max_expression_length: 1000
-    
+
   file_operations:
     type: "file_operations"
     allowed_paths: ["./data/", "./workspace/", "./documents/"]
     max_file_size: 10485760  # 10MB
     allowed_extensions: [".txt", ".md", ".json", ".yaml", ".yml", ".csv", ".py", ".js", ".html", ".css", ".cpp", ".java"]
-    
+
   code_execution:
     type: "code_execution"
     timeout_seconds: 30
@@ -159,7 +159,7 @@ performance:
   llm_timeout: 120
   tool_execution_timeout: 60
   max_concurrent_requests: 10
-  
+
 # Storage Configuration
 storage:
   cleanup_interval_hours: 24

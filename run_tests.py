@@ -5,9 +5,9 @@ Test runner script for AI Agent Base.
 This script provides convenient commands for running different types of tests.
 """
 
+import argparse
 import subprocess
 import sys
-import argparse
 from pathlib import Path
 
 

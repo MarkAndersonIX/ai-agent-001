@@ -1,7 +1,8 @@
 import os
-import yaml
-from typing import Any, Dict, List, Optional
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import yaml
 
 from core.base_config_provider import ConfigProvider
 
@@ -212,7 +213,7 @@ vector_store:
   allow_reset: false
   anonymized_telemetry: false
 
-# Document Store Configuration  
+# Document Store Configuration
 document_store:
   type: "filesystem"
   path: "./data/documents"
@@ -248,10 +249,10 @@ agents:
     rag_settings:
       top_k: 5
       similarity_threshold: 0.7
-    
+
   code_assistant:
     system_prompt: |
-      You are an expert code assistant that helps developers write clean, 
+      You are an expert code assistant that helps developers write clean,
       efficient code following best practices.
     tools:
       - web_search
@@ -264,20 +265,20 @@ agents:
       - path: "./data/programming-docs/"
         types: ["pdf", "md", "txt"]
         recursive: true
-    
+
   research_agent:
     system_prompt: |
-      You are a research assistant that finds credible sources, 
+      You are a research assistant that finds credible sources,
       summarizes complex topics, and provides citations.
     tools:
       - web_search
     rag_settings:
       top_k: 10
       similarity_threshold: 0.6
-    
+
   document_qa:
     system_prompt: |
-      You are a document analysis assistant that answers questions 
+      You are a document analysis assistant that answers questions
       based on provided documents with accurate citations.
     tools: []
     rag_settings:
@@ -290,14 +291,14 @@ tools:
     type: "web_search"
     cache_results: true
     max_results: 5
-    
+
   calculator:
     type: "calculator"
-    
+
   file_operations:
     type: "file_operations"
     allowed_paths: ["./data/", "./workspace/"]
-    
+
   code_execution:
     type: "code_execution"
     timeout_seconds: 30

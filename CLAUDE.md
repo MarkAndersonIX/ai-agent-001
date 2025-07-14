@@ -30,7 +30,7 @@
 **Files Modified:**
 - `core/__init__.py:1-24` - Added proper imports for core components
 - `agents/__init__.py:1-13` - Added agent class imports
-- `tools/__init__.py:1-13` - Added tool class imports  
+- `tools/__init__.py:1-13` - Added tool class imports
 - `providers/__init__.py:1-13` - Added provider class imports
 - `api/__init__.py:1-5` - Added API module imports
 - `cli/__init__.py:1-5` - Added CLI module imports
@@ -172,7 +172,7 @@ Only one minor enhancement remains:
 ```
 tests/
 ├── conftest.py              # Shared fixtures and mock components
-├── pytest.ini              # Pytest configuration  
+├── pytest.ini              # Pytest configuration
 ├── test_requirements.txt   # Test dependencies
 ├── unit/                   # Unit tests for all components
 ├── integration/            # Integration and workflow tests

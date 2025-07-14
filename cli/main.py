@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-import click
-import requests
 import json
 import sys
-from typing import Optional, Dict, Any
-from pathlib import Path
 import uuid
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+import click
+import requests
 
 
 class AgentCLI:

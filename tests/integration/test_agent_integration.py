@@ -2,17 +2,19 @@
 Integration tests for agent functionality.
 """
 
-import pytest
 from unittest.mock import Mock, patch
-from core.base_agent import BaseAgent, AgentResponse
+
+import pytest
+
 from agents.general_agent import GeneralAgent
+from core.base_agent import AgentResponse, BaseAgent
+from core.component_factory import ComponentFactory
 from tests.conftest import (
     MockConfigProvider,
-    MockVectorStore,
-    MockLLMProvider,
     MockEmbeddingProvider,
+    MockLLMProvider,
+    MockVectorStore,
 )
-from core.component_factory import ComponentFactory
 
 
 class TestAgentIntegration:

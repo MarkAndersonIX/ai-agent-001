@@ -2,10 +2,12 @@
 Unit tests for InMemoryBackend.
 """
 
-import pytest
 from datetime import datetime, timedelta
-from providers.in_memory_backend import InMemoryBackend
+
+import pytest
+
 from core.base_memory_backend import ChatMessage
+from providers.in_memory_backend import InMemoryBackend
 
 
 class TestInMemoryBackend:
@@ -329,41 +331,41 @@ from core.base_memory_backend import ChatMessage
 
 class TestInMemoryBackendUnittest(unittest.TestCase):
     '''Example unittest.TestCase version'''
-    
+
     def setUp(self):
         '''Set up test fixtures.'''
         config = {'max_sessions': 100, 'session_timeout_hours': 24}
         self.backend = InMemoryBackend(config)
-        
+
         now = datetime.now()
         self.sample_messages = [
             ChatMessage(role="user", content="Hello", timestamp=now),
             ChatMessage(role="assistant", content="Hi!", timestamp=now)
         ]
-    
+
     def tearDown(self):
         '''Clean up after tests.'''
         self.backend = None
-    
+
     def test_save_and_load_session(self):
         '''Test saving and loading sessions.'''
         session_id = "test_session"
-        
+
         success = self.backend.save_session(
             session_id, self.sample_messages, "test_agent"
         )
-        
+
         self.assertTrue(success)
-        
+
         loaded = self.backend.load_session(session_id)
         self.assertIsNotNone(loaded)
         self.assertEqual(len(loaded), 2)
         self.assertEqual(loaded[0].content, "Hello")
-    
+
     def test_session_count(self):
         '''Test session counting.'''
         self.assertEqual(self.backend.count_sessions(), 0)
-        
+
         self.backend.save_session("s1", self.sample_messages, "agent1")
         self.assertEqual(self.backend.count_sessions(), 1)
 

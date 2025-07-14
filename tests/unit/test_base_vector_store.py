@@ -3,7 +3,8 @@ Unit tests for base vector store functionality.
 """
 
 import pytest
-from core.base_vector_store import VectorStore, Document, SearchResult
+
+from core.base_vector_store import Document, SearchResult, VectorStore
 
 
 class TestDocument:
@@ -174,7 +175,7 @@ from unittest.mock import Mock
 
 class TestVectorStoreUnittest(unittest.TestCase):
     '''Example of how the same tests would look with unittest.TestCase'''
-    
+
     def setUp(self):
         '''Set up test fixtures before each test method.'''
         from tests.conftest import MockVectorStore
@@ -183,25 +184,25 @@ class TestVectorStoreUnittest(unittest.TestCase):
             Document("Python content", {"type": "programming"}, "doc1"),
             Document("ML content", {"type": "ml"}, "doc2")
         ]
-    
+
     def tearDown(self):
         '''Clean up after each test method.'''
         self.vector_store = None
-    
+
     def test_add_documents(self):
         '''Test adding documents to vector store.'''
         doc_ids = self.vector_store.add_documents(self.sample_docs)
-        
+
         self.assertEqual(len(doc_ids), 2)
         self.assertIsInstance(doc_ids[0], str)
         self.assertEqual(self.vector_store.count_documents(), 2)
-    
+
     def test_similarity_search(self):
         '''Test similarity search functionality.'''
         self.vector_store.add_documents(self.sample_docs)
-        
+
         results = self.vector_store.similarity_search("Python", k=1)
-        
+
         self.assertLessEqual(len(results), 1)
         self.assertIsInstance(results[0], SearchResult)
         self.assertGreaterEqual(results[0].score, 0)

@@ -116,7 +116,7 @@ vector_store:
 memory:
   type: "redis"
   url: "${REDIS_URL}"
-  
+
 llm:
   type: "openai"
   api_key: "${OPENAI_API_KEY}"
@@ -138,20 +138,20 @@ agents:
     system_prompt: |
       You are an expert code assistant that helps developers
       write clean, efficient code following best practices.
-    
+
     llm_settings:
       temperature: 0.1
       max_tokens: 2000
-    
+
     tools:
       - web_search
       - code_execution
       - file_operations
-    
+
     rag_settings:
       top_k: 5
       similarity_threshold: 0.8
-    
+
     memory:
       type: "buffer_window"
       max_messages: 20
@@ -300,7 +300,7 @@ from core.base_agent import BaseAgent
 class CustomAgent(BaseAgent):
     def __init__(self, config):
         super().__init__("custom_agent", config)
-    
+
     def _build_system_prompt(self, relevant_context, context):
         return "You are a custom AI agent with specialized capabilities."
 ```
@@ -313,11 +313,11 @@ class CustomTool(BaseTool):
     @property
     def name(self) -> str:
         return "custom_tool"
-    
-    @property  
+
+    @property
     def description(self) -> str:
         return "Description of what this tool does"
-    
+
     def execute(self, input_text: str, **kwargs) -> ToolResult:
         # Tool implementation
         return ToolResult(success=True, content="Tool result")
@@ -331,7 +331,7 @@ from tests.conftest import MockConfigProvider
 def test_custom_agent():
     config = MockConfigProvider({"agents": {"custom": {...}}})
     agent = CustomAgent(config)
-    
+
     response = agent.process_query("test query")
     assert response.content is not None
 ```
@@ -408,7 +408,7 @@ tox
    ```bash
    # Write tests first
    pytest tests/unit/test_new_feature.py -x
-   
+
    # Implement feature
    # Run tests to ensure they pass
    python run_tests.py unit

@@ -3,6 +3,7 @@ Unit tests for CalculatorTool.
 """
 
 import pytest
+
 from tools.calculator_tool import CalculatorTool
 
 
@@ -246,26 +247,26 @@ from tools.calculator_tool import CalculatorTool
 
 class TestCalculatorToolUnittest(unittest.TestCase):
     '''Example unittest.TestCase version'''
-    
+
     def setUp(self):
         '''Set up calculator for each test.'''
         self.calculator = CalculatorTool({})
-    
+
     def test_simple_addition(self):
         '''Test simple addition.'''
         result = self.calculator.execute("2 + 3")
-        
+
         self.assertTrue(result.success)
         self.assertIn("5", result.content)
         self.assertEqual(result.metadata['result'], 5)
-    
+
     def test_invalid_expression(self):
         '''Test invalid expression handling.'''
         result = self.calculator.execute("2 + + 3")
-        
+
         self.assertFalse(result.success)
         self.assertIsNotNone(result.error_message)
-    
+
     def test_tool_properties(self):
         '''Test tool properties.'''
         self.assertEqual(self.calculator.name, "calculator")
