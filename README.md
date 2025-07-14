@@ -71,6 +71,8 @@ ai-agent-base/
 # Clone and install
 git clone <repository-url>
 cd ai-agent-base
+
+# Install dependencies
 pip install -r requirements.txt
 
 # Install test dependencies (optional)

@@ -55,11 +55,6 @@ setup(
             "pinecone-client>=2.0.0",
         ]
     },
-    entry_points={
-        "console_scripts": [
-            "ai-agent=__main__:main",
-        ],
-    },
     include_package_data=True,
     package_data={
         "": ["*.yaml", "*.yml", "*.json", "*.md"],

@@ -12,7 +12,7 @@ import sys
 import argparse
 from pathlib import Path
 
-# Add current directory to Python path
+# Add current directory to Python path for directory-based execution
 sys.path.insert(0, str(Path(__file__).parent))
 
 
